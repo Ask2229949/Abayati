@@ -5,7 +5,7 @@
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ABAYATI | متجر</title>
+<title>ABAYATI | متجر العبايات الفاخر</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -292,6 +292,10 @@ font-size:18px;
 
 
 
+body {
+  user-select: none;
+}
+
 </style>
 </head>
 <body>
@@ -326,6 +330,7 @@ font-size:18px;
 
 <div id="checkout-area" style="display:none">
 <input type="text" id="cust-name" placeholder="الاسم الكامل">
+<input id="size" type="number" placeholder="اكتب المقاس (أرقام فقط)" required>
 <input type="tel" id="cust-phone" placeholder="رقم الهاتف">
 <input type="text" id="cust-address" placeholder="المدينة - الحي - الشارع">
 
@@ -436,42 +441,34 @@ checkout.style.display="none";
 async function confirmOrder(){
 
 if(cart.length === 0){
-
-Swal.fire({
-  title: 'السلة فارغة 🛍️',
-  text: 'أضيفي منتجات أولاً',
-  icon: 'info',
-  confirmButtonText: 'حسناً',
-  background: '#1a1a20',
-  color: '#fff',
-  confirmButtonColor: '#d4af37'
-});
-
-
-
-return;
+  Swal.fire({
+    title: 'السلة فارغة 🛍️',
+    text: 'أضيفي منتجات أولاً',
+    icon: 'info',
+    confirmButtonText: 'حسناً',
+    background: '#1a1a20',
+    color: '#fff',
+    confirmButtonColor: '#d4af37'
+  });
+  return;
 }
 
 const name = document.getElementById("cust-name").value.trim();
 const phone = document.getElementById("cust-phone").value.trim();
 const address = document.getElementById("cust-address").value.trim();
+const size = document.getElementById("size").value.trim();
 
-if(!name || !phone || !address){
-
-
-Swal.fire({
-  title: 'من فضلك اكملي البيانات',
-  text: 'جميع الحقول مطلوبة',
-  icon: 'warning',
-  confirmButtonText: 'حسناً',
-  background: '#1a1a20',
-  color: '#fff',
-  confirmButtonColor: '#d4af37'
-});
-
-
-
-return;
+if(!name || !phone || !address || !size){
+  Swal.fire({
+    title: 'من فضلك اكملي البيانات',
+    text: 'جميع الحقول مطلوبة',
+    icon: 'warning',
+    confirmButtonText: 'حسناً',
+    background: '#1a1a20',
+    color: '#fff',
+    confirmButtonColor: '#d4af37'
+  });
+  return;
 }
 
 let total = cart.reduce((sum,item)=> sum + item.price , 0);
@@ -483,20 +480,19 @@ let productsText = cart.map(item =>
 const { error } = await supabaseClient
 .from("orders")
 .insert([{
-
-name: name,
-phone: phone,
-address: address,
-products: productsText,
-total: total
+    name: name,
+    phone: phone,
+    address: address,
+    products: productsText,
+    total: total,
+    size: size
 }]);
 
 if(error){
-alert("حدث خطأ أثناء حفظ الطلب");
-console.log(error);
-return;
+  alert("حدث خطأ أثناء حفظ الطلب");
+  console.log(error);
+  return;
 }
-
 
 Swal.fire({
   title: 'تم استلام طلبك 💛',
@@ -505,25 +501,20 @@ Swal.fire({
   confirmButtonText: 'رائع',
   background: '#1a1a20',
   color: '#fff',
-  confirmButtonColor: '#d4af37',
-  showClass: {
-    popup: 'animate__animated animate__zoomIn'
-  },
-  hideClass: {
-    popup: 'animate__animated animate__zoomOut'
-  }
+  confirmButtonColor: '#d4af37'
 });
-
 
 cart = [];
 localStorage.removeItem("cart");
 updateUI();
+
 document.getElementById("cust-name").value="";
 document.getElementById("cust-phone").value="";
 document.getElementById("cust-address").value="";
+document.getElementById("size").value="";
+
 toggleCart();
 }
-
 
 
 loadProducts();
@@ -546,10 +537,6 @@ updateUI();
     <i class="fa-brands fa-whatsapp"></i>
     <span>الدعم</span>
 </a>
-
-
-
-
 
 
 
@@ -652,12 +639,11 @@ document.addEventListener("contextmenu", e => e.preventDefault());
 
 
 
-
-
-  
-
+<script>
+document.getElementById("size").addEventListener("input", function() {
+    this.value = this.value.replace(/[^0-9]/g, "");
+});
+</script>
 
 </body>
 </html>
-
-
