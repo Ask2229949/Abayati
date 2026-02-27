@@ -311,7 +311,7 @@ font-size:18px;
 
 <div class="container">
 <div class="store-note">
-🚚 التوصيل داخل المملكة العربية السعودية فقط — الدفع عند الاستلام
+🚚 التوصيل داخل مصر بالاسكندرية فقط — الدفع عند الاستلام
 </div>
 <div class="product-grid" id="grid"></div>
 </div>
@@ -330,7 +330,7 @@ font-size:18px;
 <input type="text" id="cust-address" placeholder="المدينة - الحي - الشارع">
 
 <div style="margin-top:15px;font-size:14px;color:var(--gold);">
-الدفع: عند الاستلام داخل المملكة العربية السعودية
+الدفع : عند الاستلام داخل مصر بالاسكندرية فقط
 </div>
 
 
@@ -373,7 +373,7 @@ async function loadProducts(){
       <img src="${p.image}" class="product-img" loading="lazy">
       <div class="product-info">
         <div>${p.name}</div>
-        <div class="product-price">${p.price} ر.س</div>
+        <div class="product-price">${p.price}جنيه مصرى</div>
         <button class="add-btn" onclick="addToCart('${p.id}')">أضيفي للسلة</button>
       </div>
     </div>
@@ -422,7 +422,7 @@ items.innerHTML=cart.map((item,i)=>`
 <div class="cart-item">
 <img src="${item.image}">
 <div style="flex:1">${item.name}</div>
-<div>${item.price} ر.س</div>
+<div>${item.price} جنيه مصرى</div>
 <i class="fa-solid fa-trash remove-btn" onclick="removeFromCart(${i})"></i>
 </div>
 `).join('');
@@ -477,7 +477,7 @@ return;
 let total = cart.reduce((sum,item)=> sum + item.price , 0);
 
 let productsText = cart.map(item =>
-`${item.name} - ${item.price} ر.س`
+`${item.name} - ${item.price} جنيه مصرى`
 ).join(" | ");
 
 const { error } = await supabaseClient
