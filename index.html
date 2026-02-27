@@ -383,8 +383,10 @@ async function loadProducts(){
       </div>
     </div>
   `).join('');
-}
 
+
+updateUI(); // 👈 يخلي السلة تتنضف تلقائيًا
+}
 
 function toggleCart(){
 document.getElementById("cart-sidebar").classList.toggle("active");
@@ -417,13 +419,23 @@ this.value=this.value.replace(/[0-9]/g,'');
 });
 
 function updateUI(){
-document.getElementById("count").innerText=cart.length;
-const items=document.getElementById("cart-items");
-const checkout=document.getElementById("checkout-area");
 
-if(cart.length>0){
-checkout.style.display="block";
-items.innerHTML=cart.map((item,i)=>`
+// 🔥 حذف أي منتج مش موجود في الداتابيز
+cart = cart.filter(item => 
+  products.some(p => p.id == item.id)
+);
+
+// تحديث التخزين بعد التنضيف
+localStorage.setItem("cart", JSON.stringify(cart));
+
+document.getElementById("count").innerText = cart.length;
+
+const items = document.getElementById("cart-items");
+const checkout = document.getElementById("checkout-area");
+
+if(cart.length > 0){
+checkout.style.display = "block";
+items.innerHTML = cart.map((item,i)=>`
 <div class="cart-item">
 <img src="${item.image}">
 <div style="flex:1">${item.name}</div>
@@ -432,8 +444,8 @@ items.innerHTML=cart.map((item,i)=>`
 </div>
 `).join('');
 }else{
-items.innerHTML="<p style='text-align:center;color:#666;'>السلة فارغة</p>";
-checkout.style.display="none";
+items.innerHTML = "<p style='text-align:center;color:#666;'>السلة فارغة</p>";
+checkout.style.display = "none";
 }
 }
 
